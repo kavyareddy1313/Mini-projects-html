@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vote Machine</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
+    body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #2e8b57, #4b0082);
+        color: #fff;
+    }
+    .container {
+        background: #2a1a3fdd;
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        width: 400px;
+        text-align: center;
+    }
+    h1 {
+        margin-bottom: 30px;
+        font-size: 28px;
+        color: #c8a2c8;
+    }
+    .input-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    label {
+        display:block;
+        margin-bottom:8px;
+        font-weight:500;
+        color:#eee;
+    }
+    select {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius:10px;
+        border:2px solid #a29bfe;
+        background: #f0f5ff;
+        outline:none;
+        font-size:16px;
+        transition:0.3s;
+    }
+    select:focus {
+        border-color: #8e44ad;
+        box-shadow: 0 0 10px rgba(142,68,173,0.3);
+    }
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+    button {
+        flex:1;
+        margin: 5px;
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        color: #fff;
+        background: linear-gradient(to right, #4facfe, #8e44ad);
+        transition:0.3s;
+    }
+    button:hover {
+        background: linear-gradient(to right, #8e44ad, #4facfe);
+    }
+    .votes, .result {
+        margin-top: 25px;
+        font-size: 18px;
+        font-weight: 600;
+        padding: 15px;
+        border-radius: 12px;
+        background: #1c1c2e;
+        min-height: 50px;
+        color: #fff;
+    }
+    .votes div {
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Vote Machine</h1>
+    <div class="input-group">
+        <label for="party">Select Party</label>
+        <select id="party">
+            <option value="">--Choose Party--</option>
+            <option value="Congress">Congress</option>
+            <option value="BJP">BJP</option>
+            <option value="BRS">BRS</option>
+        </select>
+    </div>
+    <div class="buttons">
+        <button id="voteBtn">Vote</button>
+        <button id="resultBtn">Show Result</button>
+    </div>
+
+    <div class="votes" id="votes">
+        <div>Congress: 0</div>
+        <div>BJP: 0</div>
+        <div>BRS: 0</div>
+    </div>
+
+    <div class="result" id="result">Winner will appear here</div>
+</div>
+
+<script>
+    let votes = { Congress: 0, BJP: 0, BRS: 0 };
+    const votesDiv = document.getElementById("votes");
+    const resultDiv = document.getElementById("result");
+    const partySelect = document.getElementById("party");
+    const voteBtn = document.getElementById("voteBtn");
+    const resultBtn = document.getElementById("resultBtn");
+
+    voteBtn.addEventListener("click", function() {
+        const selected = partySelect.value;
+        if(!selected){
+            alert("Please select a party!");
+            return;
+        }
+        votes[selected]++;
+        alert(`Your vote for ${selected} has been recorded!`);
+        partySelect.value = "";
+    });
+
+    resultBtn.addEventListener("click", function() {
+        // Show total votes
+        votesDiv.innerHTML = `
+            <div>Congress: ${votes.Congress}</div>
+            <div>BJP: ${votes.BJP}</div>
+            <div>BRS: ${votes.BRS}</div>
+        `;
+
+        // Determine winner
+        let maxVotes = Math.max(votes.Congress, votes.BJP, votes.BRS);
+        let winners = Object.keys(votes).filter(p => votes[p] === maxVotes && maxVotes > 0);
+
+        if(maxVotes === 0){
+            resultDiv.textContent = "No votes yet";
+        } else if(winners.length === 1){
+            let lead = maxVotes - Math.min(...Object.values(votes).filter(v => v !== maxVotes));
+            resultDiv.textContent = `Winner: ${winners[0]} by ${lead} votes`;
+        } else {
+            resultDiv.textContent = `It's a tie between ${winners.join(", ")}`;
+        }
+    });
+</script>
+</body>
+</html>

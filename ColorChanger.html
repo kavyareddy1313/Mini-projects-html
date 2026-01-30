@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FillAndMove</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% {background-position:0% 50%;}
+            50% {background-position:100% 50%;}
+            100% {background-position:0% 50%;}
+        }
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+            background: rgba(255,255,255,0.15);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .boxes {
+            display: flex;
+            gap: 25px;
+        }
+        .box {
+            width: 140px;
+            height: 140px;
+            background-color: white;
+            border: 2px solid #fff;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.7s, background-color 0.7s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .box:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>FillAndMove</h2>
+        <div class="boxes">
+            <div class="box" onclick="fillAndMove()"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+    </div>
+    <script>
+        function fillAndMove() {
+            let boxes = document.getElementsByClassName("box");
+            let colors = ["#ff6b6b", "#4dabf7", "#51cf66", "#fcc419"];
+            for (let i = 0; i < boxes.length; i++) {
+                boxes[i].style.backgroundColor = colors[i];
+            }
+            boxes[0].style.transform = "translateX(-200px)";
+            boxes[1].style.transform = "translateX(-200px)";
+            boxes[2].style.transform = "translateX(200px)";
+            boxes[3].style.transform = "translateX(200px)";
+        }
+    </script>
+</body>
+</html>

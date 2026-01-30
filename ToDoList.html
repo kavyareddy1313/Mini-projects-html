@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced To-Do List</title>
+<style>
+:root{
+    --text:#333;
+    --task-bg:#fff;
+    --task-hover:#f0f0f0;
+    --btn-bg:#4caf50;
+    --btn-hover:#45a049;
+    --del-bg:#e74c3c;
+    --del-hover:#c0392b;
+    --edit-bg:#3498db;
+    --edit-hover:#2980b9;
+    --pin-bg:#f39c12;
+    --pin-hover:#d35400;
+}
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:50px;
+    background: linear-gradient(135deg, #ae1f80, #faf6c4, #fad0c4, #c2fbc3);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    transition:0.5s;
+    color: var(--text);
+}
+
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+body.dark{
+    background: linear-gradient(135deg, #434343, #000000, #222222, #555555);
+    color:#f0f0f0;
+}
+
+.container{
+    background:rgba(255,255,255,0.9);
+    border-radius:15px;
+    padding:40px 50px;
+    width:600px;
+    max-width:95%;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+body.dark .container{
+    background:rgba(30,30,30,0.9);
+}
+
+h1{text-align:center;font-size:2em;}
+
+.input-section{
+    display:flex;
+    gap:15px;
+}
+
+input#task-input{
+    flex:1;
+    padding:15px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:1em;
+    outline:none;
+}
+
+button{
+    padding:12px 18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:0.95em;
+    transition:0.2s;
+}
+
+button#add-task{background:var(--btn-bg);color:#fff;}
+button#add-task:hover{background:var(--btn-hover);}
+button#theme-toggle{background:#555;color:#fff;}
+button#theme-toggle:hover{background:#444;}
+
+ul#task-list{list-style:none;display:flex;flex-direction:column;gap:12px;padding:0;margin:0;}
+
+ul#task-list li{
+    background:var(--task-bg);
+    padding:15px;
+    border-radius:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    transition:0.2s;
+}
+
+ul#task-list li:hover{background:var(--task-hover);}
+li span{flex:1;font-size:1em;}
+.date-time{font-size:0.8em;color:gray;margin-left:10px;}
+
+button.delete{background:var(--del-bg);color:#fff;margin-left:5px;}
+button.delete:hover{background:var(--del-hover);}
+button.edit{background:var(--edit-bg);color:#fff;margin-left:5px;}
+button.edit:hover{background:var(--edit-hover);}
+button.pin{background:var(--pin-bg);color:#fff;margin-left:5px;}
+button.pin:hover{background:var(--pin-hover);}
+button.clear{background:#8e44ad;color:#fff;margin-top:15px;width:100%;padding:15px;font-size:1em;}
+button.clear:hover{background:#71368a;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Advanced To-Do List</h1>
+<button id="theme-toggle">🌙 Dark Mode</button>
+<div class="input-section">
+<input type="text" id="task-input" placeholder="Add a new task...">
+<button id="add-task">Add</button>
+</div>
+<ul id="task-list"></ul>
+<button class="clear" id="clear-all">Clear All Tasks</button>
+</div>
+
+<script>
+const taskInput=document.getElementById('task-input');
+const addBtn=document.getElementById('add-task');
+const taskList=document.getElementById('task-list');
+const themeToggle=document.getElementById('theme-toggle');
+const clearAll=document.getElementById('clear-all');
+
+function createTask(text){
+    const li=document.createElement('li');
+    const span=document.createElement('span');
+    span.textContent=text;
+
+    const dateTime=document.createElement('span');
+    const now=new Date();
+    dateTime.textContent=`${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+    dateTime.className='date-time';
+
+    const btns=document.createElement('div');
+
+    const editBtn=document.createElement('button');
+    editBtn.textContent='Edit';
+    editBtn.className='edit';
+    editBtn.onclick=()=>{
+        const newText=prompt('Edit task:',span.textContent);
+        if(newText) span.textContent=newText;
+    }
+
+    const delBtn=document.createElement('button');
+    delBtn.textContent='Delete';
+    delBtn.className='delete';
+    delBtn.onclick=()=>li.remove();
+
+    const pinBtn=document.createElement('button');
+    pinBtn.textContent='Pin';
+    pinBtn.className='pin';
+    pinBtn.onclick=()=>taskList.prepend(li);
+
+    li.appendChild(span);
+    li.appendChild(dateTime);
+    btns.appendChild(editBtn);
+    btns.appendChild(delBtn);
+    btns.appendChild(pinBtn);
+    li.appendChild(btns);
+
+    taskList.appendChild(li);
+}
+
+addBtn.addEventListener('click',()=>{
+    const task=taskInput.value.trim();
+    if(task){createTask(task);taskInput.value='';taskInput.focus();}
+});
+
+taskInput.addEventListener('keypress',(e)=>{
+    if(e.key==='Enter') addBtn.click();
+});
+
+themeToggle.addEventListener('click',()=>{
+    document.body.classList.toggle('dark');
+    themeToggle.textContent=document.body.classList.contains('dark')?'☀️ Light Mode':'🌙 Dark Mode';
+});
+
+clearAll.addEventListener('click',()=>taskList.innerHTML='');
+</script>
+</body>
+</html>
